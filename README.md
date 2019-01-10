@@ -1,2 +1,2 @@
-# pingsmartsiswa
+# PingSmartSiswa
 PingSmart Siswa
