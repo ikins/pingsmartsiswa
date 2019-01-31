@@ -3,11 +3,19 @@
 ** Bandung 1 Jan 2019
 */
 
-var appsiswa =  angular.module('app', ['onsen','ipCookie','highcharts-ng','ngRoute','angular-md5','angular-loading-bar']);
+var appsiswa =  angular.module('app', ['onsen','ipCookie','highcharts-ng','ngRoute','angular-md5','angular-loading-bar']).config(appconfig);
+appconfig.$inject = ['$httpProvider'];
+function appconfig($httpProvider){
+    $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+    $httpProvider.defaults.headers.common['X-CSRF-Token'] = $('meta[name="_csrf-api"]').attr('content');
+}
 
 
 //server
-var _URL        = "http://pingsmart.gallerysneakers27.com/api/";
+//var _URL        = "http://pingsmart.gallerysneakers27.com/api/";
+
+//local
+var _URL        = "http://localhost:7777/apismart/api/";
 
 
 var app = {
@@ -23,16 +31,14 @@ var app = {
     },
     receivedEvent: function(id) {
 
-        username_bpspams     = window.localStorage.getItem("username_bpspams");
-        kode_bps       = window.localStorage.getItem("kode_bps");
+        username_siswa  = window.localStorage.getItem("username_siswa");
+        token_siswa     = window.localStorage.getItem("token_siswa");
 
-            if (username_bpspams == '' || username_bpspams == null || kode_bps == '' || kode_bps == null) {
-                fn.load('login.html');
+            if (username_siswa == '' || username_siswa == null || token_siswa == '' || token_siswa == null) {
+                fn.load('landing-page.html');
                 return false;
             } else {
-
                 fn.load('portal.html');
-
             }
     }
 };
@@ -73,6 +79,82 @@ appsiswa.controller('getCurrentInfoWeek', ['$scope', '$http','ipCookie', functio
 
 
 appsiswa.controller('PageController', ['$scope', '$http','ipCookie', 'md5', function($scope, $http, ipCookie, md5) {
+
+
+    $scope.login = function(){
+
+        function login_action() {
+        
+        //var device_id = device.uuid;
+        var device_id = '12345678';
+
+        var uagent   = "siswa0000";
+        var username = $scope.username;
+        var password = $scope.password;
+
+
+             $http.get( _URL+"auth?uagent=" + uagent + "&user=" + username + "&pass=" + password)
+             .success(function (response) {
+                 if (response.records[0].sukses == 1) {
+
+                        window.localStorage.setItem("username_siswa", response.records[0].username);
+                        window.localStorage.setItem("token_siswa", response.records[0].token);
+
+                        fn.load('dashboard.html');       
+
+                 } else if (response.records[0].sukses != 1) {
+                    ons.notification.alert({
+                      messageHTML: 'Username dan password yang anda kirimkan salah.',
+                      title: 'Notifikasi',
+                      buttonLabel: 'OK',
+                      animation: 'default',
+                      callback: function() {
+                        // Alert button is closed!
+                      }
+                    });
+                    return false;
+                 }
+             });
+
+        }
+
+
+        if ( $scope.username == undefined ) {
+                ons.notification.alert({
+                  messageHTML: 'Username Harus Diisi',
+                  title: 'Notifikasi',
+                  buttonLabel: 'OK',
+                  animation: 'default', // or 'none'
+                  // modifier: 'optional-modifier'
+                  callback: function() {
+                    // Alert button is closed!
+                  }
+                });
+                
+                return false;
+            }
+
+        if ( $scope.password == undefined ) {
+                ons.notification.alert({
+                  messageHTML: 'Password Harus Diisi',
+                  title: 'Notifikasi',
+                  buttonLabel: 'OK',
+                  animation: 'default', // or 'none'
+                  // modifier: 'optional-modifier'
+                  callback: function() {
+                    // Alert button is closed!
+                  }
+                });
+                
+                return false;
+            }
+
+
+        login_action();
+
+
+    };
+
 
 }]);
 

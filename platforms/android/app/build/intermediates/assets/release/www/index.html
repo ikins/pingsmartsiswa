@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<!--
+    PingSmart Siswa
+    Bandung 1 Jan 2019
+-->
+<html lang="en" ng-app="app" ng-csp>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta http-equiv="Pragma" content="no-cache">
+        <link rel="icon" href="favicon.ico" type="image/x-icon">
+        <title>PingSmart Siswa</title>
+
+        <!-- CSS dependencies -->
+        <link rel="stylesheet" href="lib/onsen/css/onsenui.css" />
+        <link rel="stylesheet" href="lib/onsen/css/onsen-css-components.min.css" />
+
+        <!-- CSP support mode (required for Windows Universal apps) -->
+        <link rel="stylesheet" href="lib/angular/angular-csp.css" />
+
+        <link rel="stylesheet" href="lib/loading-bar/loading-bar.css" />
+
+        <!-- Default CSS -->
+        <link rel="stylesheet" href="css/index.css" />
+
+        <!-- JS dependencies -->
+        <script src="lib/angular/angular.min.js"></script>
+        <script src="lib/angular/angular-cookie.min.js"></script>
+        <script src="lib/angular/angular-route.js"></script>
+        <script src="lib/angular/angular-md5.js"></script>
+        <script src="lib/onsen/js/onsenui.min.js"></script>
+        <script src="lib/onsen/js/angular-onsenui.min.js"></script>
+
+        <!-- Loading Bar -->
+        <script src="lib/loading-bar/loading-bar.js"></script>
+
+        <script src="js/jquery.min.js"></script>
+        <script src="js/highcharts.js"></script>
+        <script src="js/highcharts-ng.min.js"></script>
+
+
+    </head>
+    <body ng-controller="getCurrentInfoWeek">
+
+        <ons-splitter id="appSplitter">
+          <ons-splitter-side id="menu" side="left" width="220px" collapse>
+            <ons-page ng-controller="PageController" id="menupage">
+              
+              <!-- Menu Kader -->
+              <ons-list>
+                <ons-list-item onclick="fn.load('portal.html')" tappable>
+                  Home
+                </ons-list-item>
+                <ons-list-item ng-click="logout()" tappable>
+                  Logout
+                </ons-list-item>
+              </ons-list>
+              
+            </ons-page>
+          </ons-splitter-side>
+          <ons-splitter-content id="content" page="portal.html"></ons-splitter-content>
+        </ons-splitter>
+
+        <!-- Login -->
+        <template id="login.html">
+          <ons-page ng-controller="PageController" id="contentpage">
+            <p class="title_login">
+              Login Siswa
+            </p>
+
+            <div style="text-align: center; margin-top: 30px">
+                <p>
+                  <ons-input id="nis" modifier="underbar" placeholder="Nis" float ng-model="nis"></ons-input>
+                </p>
+                <p>
+                  <ons-input id="password" modifier="underbar" type="password" placeholder="Password" float ng-model="password"></ons-input>
+                </p>
+                <ons-row>
+                    <ons-col style="margin-top: 30px;">
+                      <ons-button ng-click="login()" class="button-signin">Sign in</ons-button>
+                    </ons-col>
+                </ons-row>
+            </div>
+          </ons-page>
+        </template>
+
+        <!-- Page Siswa -->
+        <template id="portal.html">
+          <ons-page ng-controller="PagePortal" id="contentpage">
+            <ons-toolbar class="toolbar">
+              <div class="left">
+                <ons-toolbar-button onclick="fn.open()">
+                  <ons-icon icon="md-menu"></ons-icon>
+                </ons-toolbar-button>
+              </div>
+              <div class="center toolbar-head-title">
+                Portal Siswa
+              </div>
+              <div class="right toolbar-date-current">
+                {{date | date:'dd MMM yyyy'}} 
+              </div>
+            </ons-toolbar>
+            
+            
+            
+          </ons-page>
+        </template>
+
+
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript">
+        app.initialize();
+    </script>
+    </body>
+</html>

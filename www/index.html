@@ -62,6 +62,25 @@
           <ons-splitter-content id="content" page="portal.html"></ons-splitter-content>
         </ons-splitter>
 
+        <!-- Landing Page -->
+        <template id="landing-page.html">
+          <ons-page ng-controller="PageController" id="contentpage">
+          
+            <!-- Logo -->
+            <ons-col class="logo-siswa">
+
+              <img src="img/logo-siswa.png">
+
+            <!-- Link Login -->
+              <ons-col style="margin-top: 30px;">
+                <a href="#" class="log-a" onclick="fn.load('login.html')">Log In</a>
+              </ons-col>
+
+            </ons-row>
+            
+          </ons-page>
+        </template>
+
         <!-- Login -->
         <template id="login.html">
           <ons-page ng-controller="PageController" id="contentpage">
@@ -71,7 +90,7 @@
 
             <div style="text-align: center; margin-top: 30px">
                 <p>
-                  <ons-input id="nis" modifier="underbar" placeholder="Nis" float ng-model="nis"></ons-input>
+                  <ons-input id="username" modifier="underbar" placeholder="Username" float ng-model="username"></ons-input>
                 </p>
                 <p>
                   <ons-input id="password" modifier="underbar" type="password" placeholder="Password" float ng-model="password"></ons-input>
@@ -79,11 +98,6 @@
                 <ons-row>
                     <ons-col style="margin-top: 30px;">
                       <ons-button ng-click="login()" class="button-signin">Sign in</ons-button>
-                    </ons-col>
-                </ons-row>
-                <ons-row>
-                    <ons-col style="margin-top: 30px;">
-                      <span class="copyright">PingSmart &copy; 2019</span>
                     </ons-col>
                 </ons-row>
             </div>
