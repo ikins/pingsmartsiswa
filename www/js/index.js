@@ -3,19 +3,14 @@
 ** Bandung 1 Jan 2019
 */
 
-var appsiswa =  angular.module('app', ['onsen','ipCookie','highcharts-ng','ngRoute','angular-md5','angular-loading-bar']).config(appconfig);
-appconfig.$inject = ['$httpProvider'];
-function appconfig($httpProvider){
-    $httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-    $httpProvider.defaults.headers.common['X-CSRF-Token'] = $('meta[name="_csrf-api"]').attr('content');
-}
+var appsiswa =  angular.module('app', ['onsen','ipCookie','highcharts-ng','ngRoute','angular-md5','angular-loading-bar']);
 
 
 //server
-//var _URL        = "http://pingsmart.gallerysneakers27.com/api/";
+var _URL        = "http://pingsmart.gallerysneakers27.com/api/";
 
 //local
-var _URL        = "http://localhost:7777/apismart/api/";
+//var _URL        = "http://localhost:7777/apismart/api/";
 
 
 var app = {
@@ -31,14 +26,14 @@ var app = {
     },
     receivedEvent: function(id) {
 
-        username_siswa  = window.localStorage.getItem("username_siswa");
-        token_siswa     = window.localStorage.getItem("token_siswa");
+        member_id_siswa  = window.localStorage.getItem("member_id_siswa");
+        token_siswa      = window.localStorage.getItem("token_siswa");
 
-            if (username_siswa == '' || username_siswa == null || token_siswa == '' || token_siswa == null) {
+            if (member_id_siswa == '' || member_id_siswa == null || token_siswa == '' || token_siswa == null) {
                 fn.load('landing-page.html');
                 return false;
             } else {
-                fn.load('portal.html');
+                fn.load('dashboard.html');
             }
     }
 };
@@ -61,18 +56,14 @@ appsiswa.controller('getCurrentInfoWeek', ['$scope', '$http','ipCookie', functio
     $scope.date = new Date();
 
     $scope.logout = function(){
-        window.localStorage.removeItem("username_bpspams");
-        //Kader
-        window.localStorage.removeItem("kode_bps");
-        window.localStorage.removeItem("nama_petugas");
-        window.localStorage.removeItem("id_kader");
+        window.localStorage.removeItem("member_id_siswa");
+        window.localStorage.removeItem("token_siswa");
 
-
-        fn.load('login.html');
+        fn.load('landing-page.html');
     };
 
     $scope.refresh = function(){
-        fn.load('portal.html');
+        fn.load('dashboard.html');
     };
 
 }]);
@@ -88,21 +79,21 @@ appsiswa.controller('PageController', ['$scope', '$http','ipCookie', 'md5', func
         //var device_id = device.uuid;
         var device_id = '12345678';
 
-        var uagent   = "siswa0000";
         var username = $scope.username;
         var password = $scope.password;
 
 
-             $http.get( _URL+"auth?uagent=" + uagent + "&user=" + username + "&pass=" + password)
+             $http.get( _URL+"auth?user=" + username + "&pass=" + password)
              .success(function (response) {
-                 if (response.records[0].sukses == 1) {
+                 if (response.response_code == 1) {
 
-                        window.localStorage.setItem("username_siswa", response.records[0].username);
-                        window.localStorage.setItem("token_siswa", response.records[0].token);
+                    window.localStorage.setItem("member_id_siswa", response.data[0].MemberId);
+                    window.localStorage.setItem("token_siswa", response.data[0].Token);
+                    window.localStorage.setItem("nis_siswa", response.data[0].NIS);
 
-                        fn.load('dashboard.html');       
+                    fn.load('dashboard.html');
 
-                 } else if (response.records[0].sukses != 1) {
+                 } else if (response.response_code != 1) {
                     ons.notification.alert({
                       messageHTML: 'Username dan password yang anda kirimkan salah.',
                       title: 'Notifikasi',
@@ -158,10 +149,45 @@ appsiswa.controller('PageController', ['$scope', '$http','ipCookie', 'md5', func
 
 }]);
 
-appsiswa.controller('PagePortal', ['$scope', '$http', function($scope, $http) {
+appsiswa.controller('Pagedashboard', ['$scope', '$http', function($scope, $http) {
 
 
 }]);
+
+appsiswa.controller('PageJadwal', ['$scope', '$http', function($scope, $http) {
+
+    token_siswa  = window.localStorage.getItem("token_siswa");
+    nis_siswa    = window.localStorage.getItem("nis_siswa");
+
+    $http.get( _URL+"siswa-jadwal?nis=" + nis_siswa + "&token=" + token_siswa)
+        .success(function (response) {
+
+        $scope.list_jadwal = response.data;
+
+    });
+
+}]);
+
+appsiswa.controller('PageAgenda', ['$scope', '$http', function($scope, $http) {
+
+
+}]);
+
+appsiswa.controller('PageAkademik', ['$scope', '$http', function($scope, $http) {
+
+
+}]);
+
+appsiswa.controller('PagePengumuman', ['$scope', '$http', function($scope, $http) {
+
+
+}]);
+
+appsiswa.controller('PageGaleri', ['$scope', '$http', function($scope, $http) {
+
+
+}]);
+
 //--------------------------------------------------------------------LINK------------------------------------------
 
 window.fn = {};

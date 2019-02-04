@@ -1,0 +1,17 @@
+Login
+
+Username : veronica
+Password : 123456
+
+Modul
+
+1. Login
+2. Jadwal
+3. Agenda
+4. Nilai
+5. Akademik
+6. Pengumuman
+7. Galeri
+8. Dashboard
+9. Notifikasi
+10. Display jadwal hari ini di dasboard
