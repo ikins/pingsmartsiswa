@@ -134,20 +134,20 @@
             <!-- Content -->
             <ons-row class="page-content-profile">
               <ons-col>
-                <div class="circle image_position yellow">
-                  <img src="img/logo-siswa.png" width="120px" class="img_center">
+                <div class="circle image_position">
+                  <img src="{{URL_Avatar}}" width="80px" class="img_center">
                 </div>
               </ons-col>
               <ons-col>
-                <p>Veronica Budiman</p>
-                <p>NIS : 1234.567.890</p>
-                <p>Kelas 1B - SMAN 5 Bandung</p>
+                <div class="profile-nama">{{Nama}}</div>
+                <div class="profile-nisn">NISN : {{NISN}}</div>
+                <div class="profile-kelas">Kelas {{Kelas}}</div>
               </ons-col>
             </ons-row>
             <ons-row class="page-content-info">
               <ons-col>
-                  <div class="content-info">425</div>
-                  <div class="content-label">Point</div>
+                  <div class="content-info">{{Point}}</div>
+                  <div class="content-label">Poin</div>
               </ons-col>
               <ons-col>
                   <div class="content-info">Matematika</div>
@@ -161,15 +161,17 @@
             <!-- Dashboard Content -->
             <div class="dashboard-content">
               <ons-row class="page-content-detail-siswa">
-                <ons-col>
-                  <div class="circle detail-siswa blue">
+                <ons-col width="30%">
+                  <div class="circle detail-siswa">
                     <i class="fa fa-user"></i>
                   </div>
                 </ons-col>
                 <ons-col>
-                  <p>Tempat & Tanggal Lahir : Bandung, 10 Des 2001</p>
-                  <p>Agama : Islam</p>
-                  <p>Peringkat : 2 dari 32</p>
+                  <table>
+                    <tr class="info-siswa"><td>Tempat/Tgl Lahir</td><td>: {{Lahir}}, {{TglLahir}}</td></tr>
+                    <tr class="info-siswa"><td>Agama</td><td>: {{Agama}}</td></tr>
+                    <tr class="info-siswa"><td>Peringkat</td><td>: {{Rangking}} dari {{JumlahSiswa}}</td></tr>
+                  </table>
                 </ons-col>
               </ons-row>
               <ons-row class="page-content-dashboard">
@@ -179,14 +181,6 @@
                       <i class="fa fa-clock-o"></i>
                     </div>
                     <span>Jadwal</span>
-                  </a>
-                </ons-col>
-                <ons-col>
-                  <a href="#" onclick="fn.load('agenda.html')" class="nav-page">
-                    <div class="content-icon">
-                      <i class="fa fa-book"></i>
-                    </div>
-                    <span>Agenda</span>
                   </a>
                 </ons-col>
                 <ons-col>
@@ -208,19 +202,11 @@
                   </a>
                 </ons-col>
                 <ons-col>
-                  <a href="#" onclick="fn.load('galeri.html')" class="nav-page">
+                  <a href="#" onclick="fn.load('album.html')" class="nav-page">
                     <div class="content-icon">
                       <i class="fa fa-image"></i>
                     </div>
-                    <span>Galeri</span>
-                  </a>
-                </ons-col>
-                <ons-col>
-                  <a href="#" onclick="fn.load('akademik.html')" class="nav-page">
-                    <div class="content-icon">
-                      <i class="fa fa-bookmark"></i>
-                    </div>
-                    <span>Akademik</span>
+                    <span>Album</span>
                   </a>
                 </ons-col>
               </ons-row>
@@ -337,85 +323,15 @@
           </ons-page>
         </template>
 
-
-        <!-- agenda -->
-        <template id="agenda.html">
-          <ons-page ng-controller="Pagedashboard" id="contentpage">
-            <ons-toolbar class="toolbar">
-              <div class="left">
-                <ons-back-button onclick="fn.load('dashboard.html')"></ons-back-button>
-              </div>
-              <div class="center toolbar-head-title">
-                Agenda
-              </div>
-              <div class="right">
-                <ons-toolbar-button id="info-button" onclick="fn.showDialog('popover-dialog')"></ons-toolbar-button>
-              </div>
-            </ons-toolbar>
-
-
-            <!-- Content -->
-            <ons-row class="page-content">
-                <table class="hr-table" cellspacing="2" cellpadding="2" width="100%" border="0">
-                    <thead>
-                      <tr>
-                          <th align="left" colspan="2"><input class="search-text" ng-model="searchText" placeholder="Search..."></th>
-                      </tr>
-                    </thead>
-                  </table>
-                <table class="content-table content-table-horizontal content-table-highlight" cellspacing="2" cellpadding="5" width="100%" border="0">
-                    <tbody>
-                      <tr ng-repeat="x in list_agenda | filter:searchText">
-
-                        <td><a href="#" title="Info agenda" class="info-agenda" ng-click="data.msg=x.id_agenda" onclick="fn.load('detail-agenda.html')">{{ x.hari }}</a></td>
-                        <td>{{ x.agenda_detail }}</td>
-
-                      </tr>
-                    </tbody>
-                </table>
-              </ons-row>
-            
-            
-            <ons-popover id="popover-dialog" cancelable direction="down" cover-target target="#info-button">
-              <ons-list id="popover-list">
-                <ons-list-item class="more-options" onclick="fn.load('dashboard.html')" tappable>
-                  <div class="center">Home</div>
-                </ons-list-item>
-                <ons-list-item class="more-options" ng-click="logout()" tappable>
-                  <div class="center">Logout</div>
-                </ons-list-item>
-              </ons-list>
-            </ons-popover>
-            
-            <script>
-              ons.getScriptPage().onInit = function () {
-
-                var toolbarButton = ons.platform.isAndroid() ? ons.createElement(`<ons-icon icon="md-more-vert"></ons-icon>`) : ons.createElement(`<span><i class="zmdi zmdi-more-vert"></i></span>`);
-                var infoButton = document.getElementById('info-button');
-                infoButton.appendChild(toolbarButton);
-                
-                window.fn.showDialog = function (id) {
-                  var elem = document.getElementById(id);
-                  if (id === 'popover-dialog') {
-                    elem.show(infoButton);
-                  }
-                };
-              
-              };
-            </script>
-
-          </ons-page>
-        </template>
-
         <!-- nilai -->
         <template id="nilai.html">
-          <ons-page ng-controller="Pagedashboard" id="contentpage">
+          <ons-page ng-controller="PageNilaiUlangan" id="contentpage">
             <ons-toolbar class="toolbar">
               <div class="left">
                 <ons-back-button onclick="fn.load('dashboard.html')"></ons-back-button>
               </div>
               <div class="center toolbar-head-title">
-                Nilai
+                Nilai Ulangan
               </div>
               <div class="right">
                 <ons-toolbar-button id="info-button" onclick="fn.showDialog('popover-dialog')"></ons-toolbar-button>
@@ -434,10 +350,11 @@
                   </table>
                 <table class="content-table content-table-horizontal content-table-highlight" cellspacing="2" cellpadding="5" width="100%" border="0">
                     <tbody>
-                      <tr ng-repeat="x in list_nilai | filter:searchText">
+                      <tr ng-repeat="x in list_nilai_ulangan | filter:searchText">
 
-                        <td><a href="#" title="Info nilai" class="info-nilai" ng-click="data.msg=x.id_nilai" onclick="fn.load('detail-nilai.html')">{{ x.hari }}</a></td>
-                        <td>{{ x.nilai_detail }}</td>
+                        <td><a href="#" title="Info nilai" class="info-nilai" ng-click="data.msg=x.Id" onclick="fn.load('detail-nilai.html')">{{ x.Tanggal }}</a></td>
+                        <td>{{ x.Pelajaran }}</td>
+                        <td>{{ x.Nilai }}</td>
 
                       </tr>
                     </tbody>
@@ -478,7 +395,7 @@
 
         <!-- pengumuman -->
         <template id="pengumuman.html">
-          <ons-page ng-controller="Pagedashboard" id="contentpage">
+          <ons-page ng-controller="PagePengumuman" id="contentpage">
             <ons-toolbar class="toolbar">
               <div class="left">
                 <ons-back-button onclick="fn.load('dashboard.html')"></ons-back-button>
@@ -505,8 +422,8 @@
                     <tbody>
                       <tr ng-repeat="x in list_pengumuman | filter:searchText">
 
-                        <td><a href="#" title="Info pengumuman" class="info-pengumuman" ng-click="data.msg=x.id_pengumuman" onclick="fn.load('detail-pengumuman.html')">{{ x.hari }}</a></td>
-                        <td>{{ x.pengumuman_detail }}</td>
+                        <td><a href="#" title="Info pengumuman" class="info-pengumuman" ng-click="data.msg=x.Id" onclick="fn.load('detail-pengumuman.html')">{{ x.Tanggal }}</a></td>
+                        <td>{{ x.Judul }}</td>
 
                       </tr>
                     </tbody>
@@ -545,15 +462,15 @@
           </ons-page>
         </template>
 
-        <!-- galeri -->
-        <template id="galeri.html">
-          <ons-page ng-controller="Pagedashboard" id="contentpage">
+        <!-- album -->
+        <template id="album.html">
+          <ons-page ng-controller="PageAlbum" id="contentpage">
             <ons-toolbar class="toolbar">
               <div class="left">
                 <ons-back-button onclick="fn.load('dashboard.html')"></ons-back-button>
               </div>
               <div class="center toolbar-head-title">
-                Galeri
+                Album
               </div>
               <div class="right">
                 <ons-toolbar-button id="info-button" onclick="fn.showDialog('popover-dialog')"></ons-toolbar-button>
@@ -572,79 +489,10 @@
                   </table>
                 <table class="content-table content-table-horizontal content-table-highlight" cellspacing="2" cellpadding="5" width="100%" border="0">
                     <tbody>
-                      <tr ng-repeat="x in list_galeri | filter:searchText">
+                      <tr ng-repeat="x in list_album | filter:searchText">
 
-                        <td><a href="#" title="Info galeri" class="info-galeri" ng-click="data.msg=x.id_galeri" onclick="fn.load('detail-galeri.html')">{{ x.hari }}</a></td>
-                        <td>{{ x.galeri_detail }}</td>
-
-                      </tr>
-                    </tbody>
-                </table>
-              </ons-row>
-            
-            
-            <ons-popover id="popover-dialog" cancelable direction="down" cover-target target="#info-button">
-              <ons-list id="popover-list">
-                <ons-list-item class="more-options" onclick="fn.load('dashboard.html')" tappable>
-                  <div class="center">Home</div>
-                </ons-list-item>
-                <ons-list-item class="more-options" ng-click="logout()" tappable>
-                  <div class="center">Logout</div>
-                </ons-list-item>
-              </ons-list>
-            </ons-popover>
-            
-            <script>
-              ons.getScriptPage().onInit = function () {
-
-                var toolbarButton = ons.platform.isAndroid() ? ons.createElement(`<ons-icon icon="md-more-vert"></ons-icon>`) : ons.createElement(`<span><i class="zmdi zmdi-more-vert"></i></span>`);
-                var infoButton = document.getElementById('info-button');
-                infoButton.appendChild(toolbarButton);
-                
-                window.fn.showDialog = function (id) {
-                  var elem = document.getElementById(id);
-                  if (id === 'popover-dialog') {
-                    elem.show(infoButton);
-                  }
-                };
-              
-              };
-            </script>
-
-          </ons-page>
-        </template>
-
-        <!-- akademik -->
-        <template id="akademik.html">
-          <ons-page ng-controller="Pagedashboard" id="contentpage">
-            <ons-toolbar class="toolbar">
-              <div class="left">
-                <ons-back-button onclick="fn.load('dashboard.html')"></ons-back-button>
-              </div>
-              <div class="center toolbar-head-title">
-                Akademik
-              </div>
-              <div class="right">
-                <ons-toolbar-button id="info-button" onclick="fn.showDialog('popover-dialog')"></ons-toolbar-button>
-              </div>
-            </ons-toolbar>
-
-
-            <!-- Content -->
-            <ons-row class="page-content">
-                <table class="hr-table" cellspacing="2" cellpadding="2" width="100%" border="0">
-                    <thead>
-                      <tr>
-                          <th align="left" colspan="2"><input class="search-text" ng-model="searchText" placeholder="Search..."></th>
-                      </tr>
-                    </thead>
-                  </table>
-                <table class="content-table content-table-horizontal content-table-highlight" cellspacing="2" cellpadding="5" width="100%" border="0">
-                    <tbody>
-                      <tr ng-repeat="x in list_akademik | filter:searchText">
-
-                        <td><a href="#" title="Info akademik" class="info-akademik" ng-click="data.msg=x.id_akademik" onclick="fn.load('detail-akademik.html')">{{ x.hari }}</a></td>
-                        <td>{{ x.akademik_detail }}</td>
+                        <td><a href="#" title="Info album" class="info-album" ng-click="data.msg=x.Id" onclick="fn.load('detail-album.html')">{{ x.Album }}</a></td>
+                        <td>{{ x.Created }}</td>
 
                       </tr>
                     </tbody>
@@ -682,7 +530,6 @@
 
           </ons-page>
         </template>
-
 
         
 
