@@ -72,6 +72,8 @@ appsiswa.controller('getCurrentInfoWeek', ['$scope', '$http','ipCookie', functio
         window.localStorage.removeItem("TglLahir");
         window.localStorage.removeItem("Agama");
         window.localStorage.removeItem("Avatar");
+        window.localStorage.removeItem("Pelajaran");
+        window.localStorage.removeItem("JamPel");
 
         fn.load('landing-page.html');
     };
@@ -130,6 +132,8 @@ appsiswa.controller('PageController', ['$scope', '$http','ipCookie', 'md5', func
                               window.localStorage.setItem("Agama", response.data[0].Agama);
                               window.localStorage.setItem("Avatar", response.data[0].Avatar);
                               //--
+                              window.localStorage.setItem("Pelajaran", response.data[0].Pelajaran);
+                              window.localStorage.setItem("JamPel", response.data[0].JamPel);
 
                               fn.load('dashboard.html');
 
@@ -214,6 +218,9 @@ appsiswa.controller('Pagedashboard', ['$scope', '$http', function($scope, $http)
     $scope.TglLahir = window.localStorage.getItem("TglLahir");
     $scope.Agama = window.localStorage.getItem("Agama");
     $scope.Avatar = window.localStorage.getItem("Avatar");
+    //--------------------------------------------
+    $scope.Pelajaran = window.localStorage.getItem("Pelajaran");
+    $scope.JamPel = window.localStorage.getItem("JamPel");
 
     $scope.URL_Avatar = BASE_URL + "/" + $scope.Avatar;
 
@@ -245,8 +252,35 @@ appsiswa.controller('PageNilaiUlangan', ['$scope', '$http', function($scope, $ht
 
     });
 
+    this.showDialog = function(Id) {
+      if (this.dialog) {
+        this.dialog.show();
+      } else {
+        
+        $scope.Id = Id;
+        ons.createElement('detail-nilai-ulangan.html', { parentScope: $scope, append: true })
+          .then(function(dialog) {
+            this.dialog = dialog;
+            dialog.show();
+          }.bind(this));
+      }
+    }.bind(this);
+
 }]);
 
+appsiswa.controller('PageBilling', ['$scope', '$http', function($scope, $http) {
+
+    token_siswa  = window.localStorage.getItem("token_siswa");
+    nis_siswa    = window.localStorage.getItem("nis_siswa");
+
+    $http.get( _URL+"siswa-billing?nis=" + nis_siswa + "&token=" + token_siswa)
+        .success(function (response) {
+
+        $scope.list_billing = response.data;
+
+    });
+
+}]);
 
 appsiswa.controller('PagePengumuman', ['$scope', '$http', function($scope, $http) {
 
@@ -275,6 +309,22 @@ appsiswa.controller('PageAlbum', ['$scope', '$http', function($scope, $http) {
     });
 
 }]);
+
+appsiswa.controller('PageAgenda', ['$scope', '$http', function($scope, $http) {
+
+    token_siswa  = window.localStorage.getItem("token_siswa");
+    nis_siswa    = window.localStorage.getItem("nis_siswa");
+
+    $http.get( _URL+"siswa-agenda?nis=" + nis_siswa + "&token=" + token_siswa)
+        .success(function (response) {
+
+        $scope.list_agenda = response.data;
+
+    });
+
+}]);
+
+
 
 //--------------------------------------------------------------------LINK------------------------------------------
 

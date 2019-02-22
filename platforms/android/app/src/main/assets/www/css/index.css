@@ -99,7 +99,7 @@ body{
 .page-content-detail-siswa {
   font-family: 'Raleway', sans-serif;
   text-align: left;
-  padding: 20px 0 10px 0;
+  padding: 40px 0 20px 0;
 }
 
 .page-content-detail-siswa .info-siswa{
@@ -150,6 +150,13 @@ a.nav-page {
   color: #ffffff;
   cursor: pointer;
   text-decoration: none;
+}
+
+.page-content{
+
+  margin-top: 10px;
+  padding: 10px;
+
 }
 
 /** Circle 
@@ -386,25 +393,25 @@ a.log-a {
     border-spacing: 0;
     font: normal 12px Arial, sans-serif;
     margin-bottom: 10px;
-    background-color: #f5e8e8;
+    background-color: #f1f1f1;
 }
 .content-table thead th {
-    background-color: #275c90;
-    color: #fff;
-    text-shadow: 1px 1px 1px #333;
-    border: solid 1px #88c3c3;
+    text-align: left;
+    color: #666;
+    text-shadow: 1px 1px 1px #fff;
+    border-top: solid 1px #89bcd6;
 }
 .content-table tbody td {
-    border: solid 1px #88c3c3;
+    border: solid 1px #89bcd6;
     padding: 5px;
 }
 .content-table-highlight tbody tr:hover {
-    background-color: #bfbfbf;
+    background-color: #d6d5d5;
     color: #333;
 }
 .content-table-horizontal tbody td {
-    border-left: solid 1px #88c3c3;
-    border-right: solid 1px #88c3c3;
+    border-left: solid 1px #f1f1f1;
+    border-right: solid 1px #f1f1f1;
 }
 
 
@@ -412,9 +419,41 @@ a.log-a {
 *-----------------------------------
 */
 
+.search-bar {
+  width: 100%;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  border-radius: 15px;
+  border: 1px solid #e4e4e4;
+  background: #fff;
+  margin: 10px;
+}
+
+
+.search-bar .icon {
+  cursor: pointer;
+  position: absolute;
+  top: 45px;
+  left: 20px;
+  transform: translateY(-50%);
+  padding: 13px 15px 13px 11px;
+}
+
+.search-bar .input-text {
+  width: 90%;
+  border: 0;
+  border-color: none;
+  height: 20px;
+  padding: 6px 0;
+  margin-left: 30px;
+  -webkit-transition: all 0.4s ease-in-out;
+  transition: all 0.4s ease-in-out;
+}
+
 .search-text {
-  width: 98%;
+  width: 100%;
   display: block;
+  margin: 10px 10px;
   padding: 2px;
   color: #333;
   font-family: inherit;
@@ -426,6 +465,54 @@ a.log-a {
 .serach-text:focus {
   outline: none;
   border: 1px solid #737373;
+}
+
+/** UL List 
+*-----------------------------------
+*/
+.list-jadwal{
+  margin-top: 10px;
+  font-family: 'Raleway', sans-serif;
+  width: 100%;
+}
+
+.list-jadwal ul {
+  list-style-type: none;
+  width: auto;
+  padding: 0;
+}
+ 
+.list-jadwal h3 {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 200;
+  font-size: 18px;
+  color: #9e9b9b;
+}
+ 
+.list-jadwal li img {
+  float: left;
+  margin: 0 15px 0 0;
+}
+ 
+.list-jadwal li p {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 200;
+  font-size: 12px;
+}
+ 
+.list-jadwal li {
+  padding: 10px;
+  overflow: auto;
+}
+ 
+.list-jadwal li:hover {
+  background: #eee;
+  cursor: pointer;
+}
+
+.list-jadwal ul li ul li {
+    color: #595d5f;
+    margin: 0;
 }
 
 /** Popover 
