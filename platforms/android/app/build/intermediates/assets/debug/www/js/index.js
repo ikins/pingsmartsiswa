@@ -7,12 +7,12 @@ var appsiswa =  angular.module('app', ['onsen','ipCookie','highcharts-ng','ngRou
 
 
 //server
-var _URL        = "http://pingsmart.webcood.com/api/";
-var BASE_URL        = "http://pingsmart.webcood.com/";
+var _URL        = "http://smartschool.trilogi-solution.com/api/";
+var BASE_URL        = "http://smartschool.trilogi-solution.com";
 
 //local
 //var _URL        = "http://localhost:7777/apismart/api/";
-//var BASE_URL        = "http://localhost:7777/apismart/";
+//var BASE_URL        = "http://localhost:7777/apismart";
 
 
 var app = {
@@ -65,15 +65,10 @@ appsiswa.controller('getCurrentInfoWeek', ['$scope', '$http','ipCookie', functio
         //------------------------
         window.localStorage.removeItem("Nama");
         window.localStorage.removeItem("Kelas");
-        window.localStorage.removeItem("JumlahSiswa");
-        window.localStorage.removeItem("Rangking");
-        window.localStorage.removeItem("Point");
         window.localStorage.removeItem("Lahir");
         window.localStorage.removeItem("TglLahir");
         window.localStorage.removeItem("Agama");
         window.localStorage.removeItem("Avatar");
-        window.localStorage.removeItem("Pelajaran");
-        window.localStorage.removeItem("JamPel");
 
         fn.load('landing-page.html');
     };
@@ -122,18 +117,11 @@ appsiswa.controller('PageController', ['$scope', '$http','ipCookie', 'md5', func
                               window.localStorage.setItem("Nama", response.data[0].Nama);
                               //--
                               window.localStorage.setItem("Kelas", response.data[0].Kelas);
-                              window.localStorage.setItem("JumlahSiswa", response.data[0].JumlahSiswa);
-                              window.localStorage.setItem("Rangking", response.data[0].Rangking);
-                              //--
-                              window.localStorage.setItem("Point", response.data[0].Point);
                               window.localStorage.setItem("Lahir", response.data[0].Lahir);
                               window.localStorage.setItem("TglLahir", response.data[0].TglLahir);
                               //--
                               window.localStorage.setItem("Agama", response.data[0].Agama);
                               window.localStorage.setItem("Avatar", response.data[0].Avatar);
-                              //--
-                              window.localStorage.setItem("Pelajaran", response.data[0].Pelajaran);
-                              window.localStorage.setItem("JamPel", response.data[0].JamPel);
 
                               fn.load('dashboard.html');
 
@@ -209,20 +197,25 @@ appsiswa.controller('Pagedashboard', ['$scope', '$http', function($scope, $http)
     //--------------------------------------------
     $scope.Nama = window.localStorage.getItem("Nama");
     $scope.Kelas = window.localStorage.getItem("Kelas");
-    $scope.JumlahSiswa = window.localStorage.getItem("JumlahSiswa");
     //--------------------------------------------
-    $scope.Rangking = window.localStorage.getItem("Rangking");
-    $scope.Point = window.localStorage.getItem("Point");
     $scope.Lahir = window.localStorage.getItem("Lahir");
     //--------------------------------------------
     $scope.TglLahir = window.localStorage.getItem("TglLahir");
     $scope.Agama = window.localStorage.getItem("Agama");
     $scope.Avatar = window.localStorage.getItem("Avatar");
-    //--------------------------------------------
-    $scope.Pelajaran = window.localStorage.getItem("Pelajaran");
-    $scope.JamPel = window.localStorage.getItem("JamPel");
 
     $scope.URL_Avatar = BASE_URL + "/" + $scope.Avatar;
+
+    $http.get( _URL+"siswa-profile?nis=" + nis_siswa + "&token=" + token_siswa)
+    .success(function (response) {
+
+      $scope.Rangking = response.data[0].Rangking;
+      $scope.JumlahSiswa = response.data[0].JumlahSiswa;
+      $scope.Point = response.data[0].Point;
+      $scope.Pelajaran = response.data[0].Pelajaran;
+      $scope.JamPel = response.data[0].JamPel;
+
+    });
 
 }]);
 

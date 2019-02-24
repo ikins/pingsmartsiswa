@@ -61,13 +61,6 @@ body{
   color: #4ed9fc;
 }
 
-.profile-kelas{
-  font-size: 12px;
-  font-weight: 400;
-  color: #666;
-  margin-top: 10px;
-}
-
 .page-content-info {
   font-family: 'Raleway', sans-serif;
   text-align: left;
@@ -440,7 +433,7 @@ a.log-a {
 }
 
 .search-bar .input-text {
-  width: 90%;
+  width: 85%;
   border: 0;
   border-color: none;
   height: 20px;
