@@ -7,12 +7,12 @@ var appsiswa =  angular.module('app', ['onsen','ipCookie','highcharts-ng','ngRou
 
 
 //server
-var _URL        = "http://pingsmart.webcood.com/api/";
-var BASE_URL        = "http://pingsmart.webcood.com/";
+//var _URL        = "http://smartschool.trilogi-solution.com/api/";
+//var BASE_URL        = "http://smartschool.trilogi-solution.com";
 
 //local
-//var _URL        = "http://localhost:7777/apismart/api/";
-//var BASE_URL        = "http://localhost:7777/apismart/";
+var _URL        = "http://localhost:7777/apismart/api/";
+var BASE_URL        = "http://localhost:7777/apismart";
 
 
 var app = {
@@ -261,15 +261,15 @@ appsiswa.controller('PageNilaiUlangan', ['$scope', '$http', function($scope, $ht
 
 }]);
 
-appsiswa.controller('PageBilling', ['$scope', '$http', function($scope, $http) {
+appsiswa.controller('PageAkademik', ['$scope', '$http', function($scope, $http) {
 
     token_siswa  = window.localStorage.getItem("token_siswa");
     nis_siswa    = window.localStorage.getItem("nis_siswa");
 
-    $http.get( _URL+"siswa-billing?nis=" + nis_siswa + "&token=" + token_siswa)
+    $http.get( _URL+"siswa-akademik?token=" + token_siswa)
         .success(function (response) {
 
-        $scope.list_billing = response.data;
+        $scope.list_akademik = response.data;
 
     });
 

@@ -192,11 +192,11 @@
                   </a>
                 </ons-col>
                 <ons-col>
-                  <a href="#" onclick="fn.load('billing.html')" class="nav-page">
+                  <a href="#" onclick="fn.load('akademik.html')" class="nav-page">
                     <div class="content-icon">
-                      <i class="fa fa-money"></i>
+                      <i class="fa fa-university"></i>
                     </div>
-                    <span>Billing</span>
+                    <span>Akademik</span>
                   </a>
                 </ons-col>
               </ons-row>
@@ -487,15 +487,15 @@
           </ons-page>
         </template>
 
-        <!-- billing -->
-        <template id="billing.html">
-          <ons-page ng-controller="PageBilling" id="contentpage">
+        <!-- akademik -->
+        <template id="akademik.html">
+          <ons-page ng-controller="PageAkademik" id="contentpage">
             <ons-toolbar class="toolbar">
               <div class="left">
                 <ons-back-button onclick="fn.load('dashboard.html')"></ons-back-button>
               </div>
               <div class="center toolbar-head-title">
-                Billing
+                Akademik Sekolah
               </div>
               <div class="right">
                 <ons-toolbar-button id="info-button" onclick="fn.showDialog('popover-dialog')"></ons-toolbar-button>
@@ -512,23 +512,19 @@
                 <table class="content-table content-table-horizontal content-table-highlight" cellspacing="2" cellpadding="5" width="100%" border="0">
                     <thead>
                         <tr>
-                          <th>Jumlah</th>
-                          <th>Jatuh Tempo</th>
-                          <th>Status</th>
+                          <th>Keg. Akademik</th>
+                          <th>Tanggal</th>
                         </tr>
-                    </thead>
+                      </thead>
                     <tbody>
-                      <tr ng-repeat="x in list_billing | filter:searchText">
+                      <tr ng-repeat="x in list_akademik | filter:searchText">
 
-                        <td><a href="#" title="Info billing" class="info-billing" ng-click="data.msg=x.Id" onclick="fn.load('detail-billing.html')">{{ x.Jumlah }}</a></td>
-                        <td>{{ x.JatuhTempo }}</td>
-                        <td>
-                          {{ x.Status }}
-                        </td>
+                        <td><a href="#" title="Info akademik" class="info-akademik" ng-click="data.msg=x.Id" onclick="fn.load('detail-akademik.html')">{{ x.Event }}</a></td>
+                        <td>{{ x.Tanggal }}</td>
 
                       </tr>
                     </tbody>
-                </table>
+                  </table>
               </ons-row>
             
             

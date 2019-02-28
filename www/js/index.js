@@ -261,15 +261,15 @@ appsiswa.controller('PageNilaiUlangan', ['$scope', '$http', function($scope, $ht
 
 }]);
 
-appsiswa.controller('PageBilling', ['$scope', '$http', function($scope, $http) {
+appsiswa.controller('PageAkademik', ['$scope', '$http', function($scope, $http) {
 
     token_siswa  = window.localStorage.getItem("token_siswa");
     nis_siswa    = window.localStorage.getItem("nis_siswa");
 
-    $http.get( _URL+"siswa-billing?nis=" + nis_siswa + "&token=" + token_siswa)
+    $http.get( _URL+"siswa-akademik?token=" + token_siswa)
         .success(function (response) {
 
-        $scope.list_billing = response.data;
+        $scope.list_akademik = response.data;
 
     });
 
