@@ -3,7 +3,7 @@
 ** Bandung 1 Jan 2019
 */
 
-var appsiswa =  angular.module('app', ['onsen','ipCookie','highcharts-ng','ngRoute','angular-md5','angular-loading-bar']);
+var appsiswa =  angular.module('app', ['onsen','ipCookie','highcharts-ng','ngRoute','angular-md5','angular-loading-bar','ngSanitize']);
 
 
 //server
@@ -105,7 +105,16 @@ appsiswa.controller('PageController', ['$scope', '$http','ipCookie', 'md5', func
 
                     token_siswa = response.data[0].token_siswa;
 
-                    if (token_siswa != '') {
+                    
+
+                     //Login status
+                    if(response.data[0].IsLogin == 0){
+
+                        fn.load('change-password.html');
+
+                        }else{
+
+                          if (token_siswa != '') {
 
                           token_siswa  = window.localStorage.getItem("token_siswa");
                           nis_siswa    = window.localStorage.getItem("nis_siswa");
@@ -129,7 +138,7 @@ appsiswa.controller('PageController', ['$scope', '$http','ipCookie', 'md5', func
 
                         }
 
-                    fn.load('dashboard.html');
+                      }
 
                  } else if (response.response_code != 1) {
                     ons.notification.alert({
@@ -187,6 +196,82 @@ appsiswa.controller('PageController', ['$scope', '$http','ipCookie', 'md5', func
 
 }]);
 
+appsiswa.controller('PageChangePassword', ['$scope', '$http', function($scope, $http) {
+
+    //formdata
+    $scope.formData = {
+      word: /^\s*\w*\s*$/
+    };
+
+    // Set the default value of inputType
+    $scope.inputType = 'password';
+    
+    // Hide & show password function
+    $scope.hideShowPassword = function(){
+      if ($scope.inputType == 'password')
+        $scope.inputType = 'text';
+      else
+        $scope.inputType = 'password';
+    };
+
+
+    $scope.changePasswords = function(){
+
+        function change_action() {
+
+            token_siswa  = window.localStorage.getItem("token_siswa");
+            $scope.formData.token = token_siswa;
+
+            $http({ method  : 'POST',
+                url     :  _URL+"change-password",
+                data    : $.param($scope.formData),  // pass in data as strings
+                headers : { 'Content-Type': 'application/x-www-form-urlencoded' }   
+            })
+            .success(function(response) {
+
+                if (response.response_code == 1) {
+
+                    ons.notification.alert({
+                      messageHTML: 'Change Password Success',
+                      title: 'Notifikasi',
+                      buttonLabel: 'OK',
+                      animation: 'default',
+                      callback: function() {
+                        // Alert button is closed!
+                      }
+                    });
+
+                    fn.load('login.html');
+
+                }
+
+            });
+
+        }
+
+        if ( $scope.formData.password == undefined ) {
+                ons.notification.alert({
+                  messageHTML: 'Password Harus Diisi',
+                  title: 'Notifikasi',
+                  buttonLabel: 'OK',
+                  animation: 'default', // or 'none'
+                  // modifier: 'optional-modifier'
+                  callback: function() {
+                    // Alert button is closed!
+                  }
+                });
+                
+                return false;
+            }
+
+        change_action();
+
+    
+    }
+
+
+}]);
+
 appsiswa.controller('Pagedashboard', ['$scope', '$http', function($scope, $http) {
 
     token_siswa  = window.localStorage.getItem("token_siswa");
@@ -214,6 +299,14 @@ appsiswa.controller('Pagedashboard', ['$scope', '$http', function($scope, $http)
       $scope.Point = response.data[0].Point;
       $scope.Pelajaran = response.data[0].Pelajaran;
       $scope.JamPel = response.data[0].JamPel;
+
+    });
+
+    $http.get( _URL+"pengumuman-one?nis=" + nis_siswa + "&token=" + token_siswa)
+        .success(function (response) {
+
+        $scope.Id = response.data[0].Id;
+        $scope.Judul = response.data[0].Judul;
 
     });
 
@@ -246,12 +339,31 @@ appsiswa.controller('PageNilaiUlangan', ['$scope', '$http', function($scope, $ht
     });
 
     this.showDialog = function(Id) {
+
+      //variable detail nilai
+        token_siswa  = window.localStorage.getItem("token_siswa");
+        nis_siswa    = window.localStorage.getItem("nis_siswa");
+
+        $http.get( _URL+"siswa-nilai-detail?id=" + Id + "&nis=" + nis_siswa + "&token=" + token_siswa)
+        .success(function (response) {
+
+            $scope.Tanggal = response.data[0].Tanggal;
+            $scope.Jenis = response.data[0].Jenis;
+            $scope.Pelajaran = response.data[0].Pelajaran;
+            $scope.Nilai = response.data[0].Nilai;
+            $scope.Minimal = response.data[0].Minimal;
+            $scope.Status = response.data[0].Status;
+            $scope.Keterangan = response.data[0].Keterangan;
+            $scope.Penilai = response.data[0].Penilai;
+
+
+        });
+
       if (this.dialog) {
         this.dialog.show();
       } else {
-        
-        $scope.Id = Id;
-        ons.createElement('detail-nilai-ulangan.html', { parentScope: $scope, append: true })
+
+        ons.createElement('detail-nilai.html', { parentScope: $scope, append: true })
           .then(function(dialog) {
             this.dialog = dialog;
             dialog.show();
@@ -261,15 +373,176 @@ appsiswa.controller('PageNilaiUlangan', ['$scope', '$http', function($scope, $ht
 
 }]);
 
-appsiswa.controller('PageBilling', ['$scope', '$http', function($scope, $http) {
+appsiswa.controller('PageNilaiUts', ['$scope', '$http', function($scope, $http) {
 
     token_siswa  = window.localStorage.getItem("token_siswa");
     nis_siswa    = window.localStorage.getItem("nis_siswa");
 
-    $http.get( _URL+"siswa-billing?nis=" + nis_siswa + "&token=" + token_siswa)
+    $http.get( _URL+"siswa-nilai-uts?nis=" + nis_siswa + "&token=" + token_siswa)
         .success(function (response) {
 
-        $scope.list_billing = response.data;
+        $scope.list_nilai_uts = response.data;
+
+    });
+
+    this.showDialog = function(Id) {
+
+      //variable detail nilai
+        token_siswa  = window.localStorage.getItem("token_siswa");
+        nis_siswa    = window.localStorage.getItem("nis_siswa");
+
+        $http.get( _URL+"siswa-nilai-detail?id=" + Id + "&nis=" + nis_siswa + "&token=" + token_siswa)
+        .success(function (response) {
+
+            $scope.Tanggal = response.data[0].Tanggal;
+            $scope.Jenis = response.data[0].Jenis;
+            $scope.Pelajaran = response.data[0].Pelajaran;
+            $scope.Nilai = response.data[0].Nilai;
+            $scope.Minimal = response.data[0].Minimal;
+            $scope.Status = response.data[0].Status;
+            $scope.Keterangan = response.data[0].Keterangan;
+            $scope.Penilai = response.data[0].Penilai;
+
+
+        });
+
+      if (this.dialog) {
+        this.dialog.show();
+      } else {
+
+        ons.createElement('detail-nilai.html', { parentScope: $scope, append: true })
+          .then(function(dialog) {
+            this.dialog = dialog;
+            dialog.show();
+          }.bind(this));
+      }
+    }.bind(this);
+
+}]);
+
+appsiswa.controller('PageNilaiUas', ['$scope', '$http', function($scope, $http) {
+
+    token_siswa  = window.localStorage.getItem("token_siswa");
+    nis_siswa    = window.localStorage.getItem("nis_siswa");
+
+    $http.get( _URL+"siswa-nilai-uas?nis=" + nis_siswa + "&token=" + token_siswa)
+        .success(function (response) {
+
+        $scope.list_nilai_uas = response.data;
+
+    });
+
+    this.showDialog = function(Id) {
+
+      //variable detail nilai
+        token_siswa  = window.localStorage.getItem("token_siswa");
+        nis_siswa    = window.localStorage.getItem("nis_siswa");
+
+        $http.get( _URL+"siswa-nilai-detail?id=" + Id + "&nis=" + nis_siswa + "&token=" + token_siswa)
+        .success(function (response) {
+
+            $scope.Tanggal = response.data[0].Tanggal;
+            $scope.Jenis = response.data[0].Jenis;
+            $scope.Pelajaran = response.data[0].Pelajaran;
+            $scope.Nilai = response.data[0].Nilai;
+            $scope.Minimal = response.data[0].Minimal;
+            $scope.Status = response.data[0].Status;
+            $scope.Keterangan = response.data[0].Keterangan;
+            $scope.Penilai = response.data[0].Penilai;
+
+
+        });
+
+      if (this.dialog) {
+        this.dialog.show();
+      } else {
+
+        ons.createElement('detail-nilai.html', { parentScope: $scope, append: true })
+          .then(function(dialog) {
+            this.dialog = dialog;
+            dialog.show();
+          }.bind(this));
+      }
+    }.bind(this);
+
+}]);
+
+appsiswa.controller('PageNilaiRaport', ['$scope', '$http', function($scope, $http) {
+
+    token_siswa  = window.localStorage.getItem("token_siswa");
+    nis_siswa    = window.localStorage.getItem("nis_siswa");
+
+    $http.get( _URL+"siswa-nilai-raport?nis=" + nis_siswa + "&token=" + token_siswa)
+        .success(function (response) {
+
+        $scope.list_nilai_raport = response.data;
+
+    });
+
+    this.showDialog = function(Id) {
+
+      //variable detail nilai
+        token_siswa  = window.localStorage.getItem("token_siswa");
+        nis_siswa    = window.localStorage.getItem("nis_siswa");
+
+        $http.get( _URL+"siswa-nilai-detail?id=" + Id + "&nis=" + nis_siswa + "&token=" + token_siswa)
+        .success(function (response) {
+
+            $scope.Tanggal = response.data[0].Tanggal;
+            $scope.Jenis = response.data[0].Jenis;
+            $scope.Pelajaran = response.data[0].Pelajaran;
+            $scope.Nilai = response.data[0].Nilai;
+            $scope.Minimal = response.data[0].Minimal;
+            $scope.Status = response.data[0].Status;
+            $scope.Keterangan = response.data[0].Keterangan;
+            $scope.Penilai = response.data[0].Penilai;
+
+
+        });
+
+      if (this.dialog) {
+        this.dialog.show();
+      } else {
+
+        ons.createElement('detail-nilai.html', { parentScope: $scope, append: true })
+          .then(function(dialog) {
+            this.dialog = dialog;
+            dialog.show();
+          }.bind(this));
+      }
+    }.bind(this);
+
+}]);
+
+appsiswa.controller('PageAkademik', ['$scope', '$http', function($scope, $http) {
+
+    token_siswa  = window.localStorage.getItem("token_siswa");
+    nis_siswa    = window.localStorage.getItem("nis_siswa");
+
+    $http.get( _URL+"siswa-akademik?token=" + token_siswa)
+        .success(function (response) {
+
+        $scope.list_akademik = response.data;
+
+    });
+
+}]);
+
+
+appsiswa.controller('PageAkademikDetail', ['$scope', '$http', function($scope, $http) {
+
+    token_siswa  = window.localStorage.getItem("token_siswa");
+    nis_siswa    = window.localStorage.getItem("nis_siswa");
+
+    $http.get( _URL+"siswa-akademik-detail?token=" + token_siswa +"&id=" + $scope.data.msg)
+        .success(function (response) {
+
+        $scope.Tanggal = response.data[0].Tanggal;
+        $scope.Event = response.data[0].Event;
+        $scope.Tempat = response.data[0].Tempat;
+        $scope.Deskripsi = response.data[0].Deskripsi;
+        $scope.Status = response.data[0].Status;
+        $scope.Keterangan = response.data[0].Keterangan;
 
     });
 
@@ -289,10 +562,30 @@ appsiswa.controller('PagePengumuman', ['$scope', '$http', function($scope, $http
 
 }]);
 
+appsiswa.controller('PagePengumumanDetail', ['$scope', '$http', function($scope, $http) {
+
+    token_siswa  = window.localStorage.getItem("token_siswa");
+    nis_siswa    = window.localStorage.getItem("nis_siswa");
+
+    $http.get( _URL+"pengumuman-view?nis=" + nis_siswa + "&id=" + $scope.data.msg +"&token=" + token_siswa)
+        .success(function (response) {
+
+        $scope.Tanggal = response.data[0].Tanggal;
+        $scope.Judul = response.data[0].Judul;
+        $scope.Pengumuman = response.data[0].Pengumuman;
+        $scope.BeginPublish = response.data[0].BeginPublish;
+        $scope.EndPublish = response.data[0].EndPublish;
+
+    });
+
+}]);
+
 appsiswa.controller('PageAlbum', ['$scope', '$http', function($scope, $http) {
 
     token_siswa  = window.localStorage.getItem("token_siswa");
     nis_siswa    = window.localStorage.getItem("nis_siswa");
+
+    $scope.BASE_URL = BASE_URL;
 
     $http.get( _URL+"siswa-album?nis=" + nis_siswa + "&token=" + token_siswa)
         .success(function (response) {
@@ -300,6 +593,52 @@ appsiswa.controller('PageAlbum', ['$scope', '$http', function($scope, $http) {
         $scope.list_album = response.data;
 
     });
+
+}]);
+
+appsiswa.controller('PageAlbumDetail', ['$scope', '$http', function($scope, $http) {
+
+    token_siswa  = window.localStorage.getItem("token_siswa");
+    nis_siswa    = window.localStorage.getItem("nis_siswa");
+
+    $scope.BASE_URL = BASE_URL;
+
+    $http.get( _URL+"siswa-album-detail?token=" + token_siswa +"&id="+ $scope.data.msg)
+        .success(function (response) {
+
+
+        $scope.list_album_detail = response.data;
+
+    });
+
+    this.showDialog = function(Id) {
+
+      if(Id != '') {
+
+            //variable detail nilai
+            token_siswa  = window.localStorage.getItem("token_siswa");
+
+            $http.get( _URL+"siswa-album-detail-view?token=" + token_siswa +"&id="+ Id)
+            .success(function (response) {
+
+                $scope.Image = response.data[0].Image;
+
+
+            });
+
+        }
+
+      if (this.dialog) {
+        this.dialog.show();
+      } else {
+
+        ons.createElement('detail-album-view.html', { parentScope: $scope, append: true })
+          .then(function(dialog) {
+            this.dialog = dialog;
+            dialog.show();
+          }.bind(this));
+      }
+    }.bind(this);
 
 }]);
 
@@ -312,6 +651,25 @@ appsiswa.controller('PageAgenda', ['$scope', '$http', function($scope, $http) {
         .success(function (response) {
 
         $scope.list_agenda = response.data;
+
+    });
+
+}]);
+
+appsiswa.controller('PageAgendaDetail', ['$scope', '$http', function($scope, $http) {
+
+    token_siswa  = window.localStorage.getItem("token_siswa");
+    nis_siswa    = window.localStorage.getItem("nis_siswa");
+
+    $http.get( _URL+"siswa-agenda-detail?token=" + token_siswa +"&id="+ $scope.data.msg)
+        .success(function (response) {
+
+        $scope.TglAwal = response.data[0].TglAwal;
+        $scope.TglAkhir = response.data[0].TglAkhir;
+        $scope.JamAwal = response.data[0].JamAwal;
+        $scope.JamAkhir = response.data[0].JamAkhir;
+        $scope.Judul = response.data[0].Judul;
+        $scope.Deskripsi = response.data[0].Deskripsi;
 
     });
 
